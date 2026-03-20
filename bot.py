@@ -5,8 +5,8 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
-API_TOKEN = "YOUR_BOT_TOKEN"
-ADMIN_GROUP_ID = -100123456789
+API_TOKEN = "8763489658:AAFAoiuKskqSXBdu855EW0HOf-O3GFcEiD0"
+ADMIN_GROUP_ID = -5217526899
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
