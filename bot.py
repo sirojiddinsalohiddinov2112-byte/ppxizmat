@@ -43,8 +43,7 @@ async def choose_amount(callback: types.CallbackQuery, state: FSMContext):
 @dp.message_handler(state=OrderState.waiting_for_id)
 async def get_pubg_id(message: types.Message, state: FSMContext):
     await state.update_data(pubg_id=message.text)
-    await message.answer("💳 To‘lov karta:
-8600 1404 2325 0373 Chek yuboring:")
+   await message.answer("💳 To‘lov qilingan karta: 8600 1404 2325 0373\n✅ Chek yuboring ")
     await OrderState.waiting_for_check.set()
 
 @dp.message_handler(content_types=['photo'], state=OrderState.waiting_for_check)
