@@ -19,10 +19,23 @@ class OrderState(StatesGroup):
 menu = ReplyKeyboardMarkup(resize_keyboard=True)
 menu.add(KeyboardButton("💰 PP xizmatlari"))
 
-prices = InlineKeyboardMarkup()
-prices.add(
-    InlineKeyboardButton("60 UC - 10k", callback_data="60"),
-    InlineKeyboardButton("325 UC - 50k", callback_data="325")
+pp_prices = InlineKeyboardMarkup(row_width=2)
+
+pp_prices.add(
+    InlineKeyboardButton("10K PP - 13K so’m", callback_data="10k"),
+    InlineKeyboardButton("20K PP - 26K so’m", callback_data="20k"),
+    InlineKeyboardButton("40K PP - 53K so’m", callback_data="40k"),
+    InlineKeyboardButton("50K PP - 65K so’m", callback_data="50k"),
+    InlineKeyboardButton("70K PP - 91K so’m", callback_data="70k"),
+    InlineKeyboardButton("100K PP - 130K so’m", callback_data="100k")
+)
+
+# Foydalanuvchiga xabar yuborish
+message_text = """🤩 Bizda endi POPULYARNOST hizmati bor
+
+• PP Battleda yutishda sizga PP kerak bo’lsa, bizdan PP sotib olishingiz mumkin """
+
+await message.answer(message_text, reply_markup=pp_prices)
 )
 
 @dp.message_handler(commands=['start'])
