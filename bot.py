@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 API_TOKEN = "8763489658:AAFAoiuKskqSXBdu855EW0HOf-O3GFcEiD0"
-ADMIN_GROUP_ID = -5217526899  # Bot admin qo‘shilgan guruh ID yoki test uchun shaxsiy user_id
+ADMIN_GROUP_ID = -1003589343216  # Bot admin qo‘shilgan guruh ID yoki test uchun shaxsiy user_id
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
