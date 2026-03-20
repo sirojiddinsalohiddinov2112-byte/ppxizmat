@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 API_TOKEN = "8763489658:AAFAoiuKskqSXBdu855EW0HOf-O3GFcEiD0"
-ADMIN_GROUP_ID = -5217526899
+ADMIN_GROUP_ID = -5217526899  # Bot admin qo‘shilgan guruh ID yoki test uchun shaxsiy user_id
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -75,14 +75,17 @@ async def get_check(message: types.Message, state: FSMContext):
         InlineKeyboardButton("❌ Bekor qilish", callback_data=f"cancel|{message.from_user.id}")
     )
 
-    await bot.send_photo(
-        ADMIN_GROUP_ID,
-        photo=message.photo[-1].file_id,
-        caption=caption,
-        reply_markup=admin_buttons
-    )
+    try:
+        await bot.send_photo(
+            ADMIN_GROUP_ID,
+            photo=message.photo[-1].file_id,
+            caption=caption,
+            reply_markup=admin_buttons
+        )
+        await message.answer("⏳ To‘lov tekshirilmoqda. 2-10 minut kuting.")
+    except Exception as e:
+        await message.answer(f"❌ Admin guruhiga xabar yuborib bo‘lmadi: {e}")
 
-    await message.answer("⏳ To‘lov tekshirilmoqda. 2-10 minut kuting.")
     await state.finish()
 
 @dp.callback_query_handler(lambda c: c.data.startswith("confirm"))
