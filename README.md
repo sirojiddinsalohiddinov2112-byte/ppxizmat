@@ -1,0 +1,1 @@
+# PUBG UC Bot\n\nReplace YOUR_BOT_TOKEN in bot.py and run.
