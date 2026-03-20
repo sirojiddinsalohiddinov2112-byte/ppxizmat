@@ -8,7 +8,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 API_TOKEN = "8763489658:AAFAoiuKskqSXBdu855EW0HOf-O3GFcEiD0"
 ADMIN_GROUP_ID = -1003589343216  # Bot admin qo‘shilgan guruh ID yoki test uchun shaxsiy user_id
 
-bot = Bot(token=API_TOKEN)
+bot = Bot(token=API_TOKEN, parse_mode="HTML")  # HTML parse_mode qo‘shildi
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 class OrderState(StatesGroup):
@@ -41,11 +41,11 @@ async def start(message: types.Message):
 
 @dp.message_handler(lambda message: message.text == "💰 PP xizmatlari")
 async def show_prices(message: types.Message):
-    message_text = """🤩 Bizda endi POPULYARNOST hizmati bor
+    message_text = """🤩 <b>Bizda endi POPULYARNOST hizmati bor</b>
 
 • PP Battleda yutishda sizga PP kerak bo’lsa, bizdan PP sotib olishingiz mumkin 
 
-🤑 PP SOTILADIGAN NARXLA:"""
+🤑 <b>PP SOTILADIGAN NARXLA:</b>"""
     await message.answer(message_text, reply_markup=pp_prices)
     await OrderState.choosing.set()
 
@@ -58,7 +58,7 @@ async def choose_amount(callback: types.CallbackQuery, state: FSMContext):
 @dp.message_handler(state=OrderState.waiting_for_id)
 async def get_pubg_id(message: types.Message, state: FSMContext):
     await state.update_data(pubg_id=message.text)
-    await message.answer("💳 To‘lov qilingan karta: 8600 1404 2325 0373\n✅ Chek yuboring")
+    await message.answer("💳 <b>To‘lov qilingan karta</b>: 8600 1404 2325 0373\n✅ Chek yuboring")
     await OrderState.waiting_for_check.set()
 
 @dp.message_handler(content_types=['photo'], state=OrderState.waiting_for_check)
@@ -67,7 +67,7 @@ async def get_check(message: types.Message, state: FSMContext):
     pubg_id = data['pubg_id']
     amount = data['amount']
 
-    caption = f"🆕 Yangi buyurtma\n\nID: {pubg_id}\nUC: {amount}"
+    caption = f"🆕 <b>Yangi buyurtma</b>\n\nID: {pubg_id}\nUC: {amount}"
 
     admin_buttons = InlineKeyboardMarkup()
     admin_buttons.add(
@@ -88,16 +88,26 @@ async def get_check(message: types.Message, state: FSMContext):
 
     await state.finish()
 
+# Admin tasdiqlash handleri
 @dp.callback_query_handler(lambda c: c.data.startswith("confirm"))
 async def confirm_order(callback: types.CallbackQuery):
     user_id = int(callback.data.split("|")[1])
-    await bot.send_message(user_id, "✅ To‘lov qabul qilindi, UC tushadi")
+    await bot.send_message(user_id, "✅ To‘lov qabul qilindi, PP tushdi")
+    
+    # Foydalanuvchini asosiy menu’ga qaytarish
+    await bot.send_message(user_id, "🔙 Asosiy menyuga qaytdingiz", reply_markup=menu)
+    
     await callback.answer("Tasdiqlandi")
 
+# Admin bekor qilish handleri
 @dp.callback_query_handler(lambda c: c.data.startswith("cancel"))
 async def cancel_order(callback: types.CallbackQuery):
     user_id = int(callback.data.split("|")[1])
-    await bot.send_message(user_id, "❌ Buyurtma bekor qilindi")
+    await bot.send_message(user_id, "❌ Buyurtma bekor qilindi chek soxta bolishi mumkin")
+    
+    # Foydalanuvchini asosiy menu’ga qaytarish
+    await bot.send_message(user_id, "🔙 Asosiy menyuga qaytdingiz", reply_markup=menu)
+    
     await callback.answer("Bekor qilindi")
 
 if __name__ == "__main__":
