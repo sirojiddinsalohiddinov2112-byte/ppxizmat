@@ -16,26 +16,23 @@ class OrderState(StatesGroup):
     waiting_for_id = State()
     waiting_for_check = State()
 
+# Asosiy menu
 menu = ReplyKeyboardMarkup(resize_keyboard=True)
 menu.add(KeyboardButton("💰 PP xizmatlari"))
 
+# Narxlar menyusi
 pp_prices = InlineKeyboardMarkup(row_width=2)
-
-pp_prices.add(
+pp_prices.row(
     InlineKeyboardButton("10K PP - 13K so’m", callback_data="10k"),
-    InlineKeyboardButton("20K PP - 26K so’m", callback_data="20k"),
+    InlineKeyboardButton("20K PP - 26K so’m", callback_data="20k")
+)
+pp_prices.row(
     InlineKeyboardButton("40K PP - 53K so’m", callback_data="40k"),
-    InlineKeyboardButton("50K PP - 65K so’m", callback_data="50k"),
+    InlineKeyboardButton("50K PP - 65K so’m", callback_data="50k")
+)
+pp_prices.row(
     InlineKeyboardButton("70K PP - 91K so’m", callback_data="70k"),
     InlineKeyboardButton("100K PP - 130K so’m", callback_data="100k")
-)
-
-# Foydalanuvchiga xabar yuborish
-message_text = """🤩 Bizda endi POPULYARNOST hizmati bor
-
-• PP Battleda yutishda sizga PP kerak bo’lsa, bizdan PP sotib olishingiz mumkin """
-
-await message.answer(message_text, reply_markup=pp_prices)
 )
 
 @dp.message_handler(commands=['start'])
@@ -44,7 +41,12 @@ async def start(message: types.Message):
 
 @dp.message_handler(lambda message: message.text == "💰 PP xizmatlari")
 async def show_prices(message: types.Message):
-    await message.answer("Narxni tanlang:", reply_markup=prices)
+    message_text = """🤩 Bizda endi POPULYARNOST hizmati bor
+
+• PP Battleda yutishda sizga PP kerak bo’lsa, bizdan PP sotib olishingiz mumkin 
+
+🤑 PP SOTILADIGAN NARXLA:"""
+    await message.answer(message_text, reply_markup=pp_prices)
     await OrderState.choosing.set()
 
 @dp.callback_query_handler(state=OrderState.choosing)
@@ -56,7 +58,7 @@ async def choose_amount(callback: types.CallbackQuery, state: FSMContext):
 @dp.message_handler(state=OrderState.waiting_for_id)
 async def get_pubg_id(message: types.Message, state: FSMContext):
     await state.update_data(pubg_id=message.text)
-   await message.answer("💳 To‘lov qilingan karta: 8600 1404 2325 0373\n✅ Chek yuboring ")
+    await message.answer("💳 To‘lov qilingan karta: 8600 1404 2325 0373\n✅ Chek yuboring")
     await OrderState.waiting_for_check.set()
 
 @dp.message_handler(content_types=['photo'], state=OrderState.waiting_for_check)
